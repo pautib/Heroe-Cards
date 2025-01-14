@@ -1,15 +1,17 @@
-import { Navigate, useNavigate, useParams} from "react-router-dom";
-import {getPokemonById} from "../helpers";
-import {useEffect, useMemo} from "react";
+import { useNavigate, useParams} from "react-router-dom";
+import { capitalize } from "lodash";
+import {PokemonCarousel, PokemonCryButton, PokemonStatsCalculator, PokemonStatsChart, PokeballSpinner, PokemonTypeImage} from "../components";
+import { PopupButton } from "../../ui/";
+import { usePokemon } from "../hooks";
+import { useMemo } from "react";
 
-export const HeroePage = () => {
 
-    const { heroeId, ...rest } = useParams();
-    const heroe = useMemo( () => getPokemonById(heroeId), [heroeId]);
+export const PokemonPage = () => {
 
-    if (!heroe) {
-        return <Navigate to="/marvel" />
-    }
+    // eslint-disable-next-line no-unused-vars
+    const { pokemonId, ...rest } = useParams();
+    const {loading, ...mappedPokemon} = usePokemon(pokemonId);
+    const pokemon = useMemo(() => mappedPokemon, [mappedPokemon]);
 
     const navigate = useNavigate();
 
@@ -17,28 +19,76 @@ export const HeroePage = () => {
         navigate(-1);
     }
 
-    const heroeImageUrl = `/heroes/${ heroeId }.jpg`;
-
     return (
-        <div className="row mt-5">
-            <div className="col-4">
-                <img src={ heroeImageUrl } alt={ heroe.superhero } className="img-thumbnail animate__animated animate__fadeInLeft" />
+        loading ? (
+            <PokeballSpinner/>
+        ) : (
+
+        <div className="container-fluid">
+
+            <div className="row mt-1">
+
+                <PokemonCarousel imageJson={ pokemon.sprites } />
+
+                <div className="col-xs-8 col-sm-8 col-md-8">
+                    <h3>{ capitalize(pokemon.name) }</h3>
+                    <ul className="list-group list-group-flush">
+                        <li className="list-group-item"> <b>Id: </b> { pokemon.id } </li>
+                        <li className="list-group-item"> <b>Name: </b> { capitalize(pokemon.name) } </li>
+                        <li className="list-group-item"> <b>Height: </b> { pokemon.height * 10 } cm</li>
+                        <li className="list-group-item"> <b>Weight: </b> { pokemon.weight / 10 } Kg</li>
+                        <li className="list-group-item"> <b>Type: </b>
+                            <PokemonTypeImage pokemonTypeName={ capitalize(pokemon.type1) } />
+                            <PokemonTypeImage pokemonTypeName={ capitalize(pokemon.type2) } />
+                        </li>
+                        <li className="list-group-item"> <b>Abilities: </b> { pokemon.abilities.map(abilityNames => capitalize(abilityNames) + "").join(", ") }</li>
+                        <li className="list-group-item">
+                            <PokemonCryButton cryArray={ Object.values(pokemon.cries) } />
+                            <PopupButton buttonTitle="Get NFT" style={ { buttonClassName: 'pokeNavWalletButton'} }>
+                                <PokemonCarousel imageJson={ pokemon.sprites } />
+                            </PopupButton>
+                            <button className="btn m-2 pokeGoBackButton" onClick={ onNavigateBack }>
+                                Go Back
+                            </button>
+                        </li>
+                    </ul>
+                    <br/>
+                </div>
+
             </div>
 
-            <div className="col-8">
-                <h3>{ heroe.superhero }</h3>
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item"> <b>Alter ego: </b> { heroe.alter_ego } </li>
-                    <li className="list-group-item"> <b>Publisher: </b> { heroe.publisher } </li>
-                    <li className="list-group-item"> <b>First appearance: </b> { heroe.first_appearance } </li>
-                </ul>
+            <div className="row mt-1">
+                <h3>Base stats</h3>
+                <div className="col-xs-6 col-sm-6 col-md-6">
+                    <PokemonStatsChart stats={
+                        [pokemon.baseHp,
+                        pokemon.baseAtk,
+                        pokemon.baseDef,
+                        pokemon.baseSpAtk,
+                        pokemon.baseSpDef,
+                        pokemon.baseSpeed] } >
+                    </PokemonStatsChart>
+                </div>
+            </div>
 
-                <h5 className="mt-3">Characters</h5>
-                <p>{ heroe.characters }</p>
-
-                <button className="btn btn-outline-primary" onClick={ onNavigateBack }>Regresar</button>
+            <div className="row mt-1">
+                <h3>Stats Calculator</h3>
+                <div className="col-xs-12 col-sm-12 col-md-12">
+                    <PokemonStatsCalculator baseStats = {
+                        [pokemon.baseHp,
+                        pokemon.baseAtk,
+                        pokemon.baseDef,
+                        pokemon.baseSpAtk,
+                        pokemon.baseSpDef,
+                        pokemon.baseSpeed] }
+                        name={pokemon.name}
+                    >
+                    </PokemonStatsCalculator>
+                </div>
             </div>
 
         </div>
+        )
+
     )
 }

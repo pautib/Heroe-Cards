@@ -1,14 +1,19 @@
+const pokeApiRoot = 'https://pokeapi.co/api/v2/pokemon/';
+
+async function fetchPokemonData(id) {
+
+    try {
+        const response = await fetch(pokeApiRoot + id);
+        return response.json();
+    } catch (e) {
+        console.error(e);
+        throw new Error(`${id} is not a valid pokemon`);
+    }
+
+}
+
 
 export const getPokemonById = async(id) => {
-    const pokeApiRoot = 'https://pokeapi.co/api/v2/pokemon/';
-
-    const pokemonInfo = await fetch(pokeApiRoot + id)
-        .then(response => response.json())
-        .catch(error => {
-                console.error(error);
-                throw new Error(`${ name } is not a valid pokemon`);
-            }
-        );
-
+    const pokemonInfo = await fetchPokemonData(id);
     return pokemonInfo;
 }

@@ -1,2 +1,2 @@
-export * from './SearchHeroesPage.jsx'
-export * from './HeroePage.jsx'
+export * from './SearchPokemonPage.jsx'
+export * from './PokemonPage.jsx'

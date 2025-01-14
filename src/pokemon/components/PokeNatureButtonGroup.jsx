@@ -1,30 +1,49 @@
 import PropTypes from "prop-types";
+import { capitalize } from "lodash";
+import { Tooltip } from "react-tooltip";
 
-export const InlineInputNumber = ({id, minValue, maxValue, labelContent, value, onChangeFunction}) => {
+export const PokeNatureButtonGroup = ({ setMatrix, naturesArray }) => {
 
     return (
-        <div data-mdb-input-init className="d-flex">
-            <label className="form-label" htmlFor={ id } style={{ padding: "5px" }}>{ labelContent }</label>
-            <input
-                min={ minValue }
-                max={ maxValue}
-                value={ value }
-                placeholder={minValue + "to" + maxValue}
-                type="number"
-                id={ id }
-                className="form-control"
-                style={{ borderRadius: '10px !important', blockSize: '50%', maxWidth: '50%'}}
-                onChange={onChangeFunction}
-            />
+        <div className="btn-group-toggle wrap" role="group" aria-label="Natures available">
+            {
+                naturesArray?.map( ([keyName, natureObject] ) => (
+                    <PokeNatureButton key={ keyName } natureName={ keyName } natureObject={ natureObject } setMatrix={ setMatrix } />
+                ))
+            }
         </div>
-    );
+    )
 }
 
-InlineInputNumber.propTypes = {
-    id: PropTypes.string,
-    minValue: PropTypes.number,
-    maxValue: PropTypes.number,
-    value: PropTypes.number,
-    labelContent: PropTypes.string,
-    onChangeFunction: PropTypes.func,
+const PokeNatureButton = ({ natureName, natureObject, setMatrix }) => {
+
+    return (
+        <>
+            <Tooltip id={ natureName } />
+            <button type="button"
+                    id={natureName}
+                    key={natureName}
+                    className="btn m-2 pokeNatureButtons"
+                    data-tooltip-id={ natureName }
+                    data-tooltip-content={ natureObject.description }
+                    data-tooltip-place="top"
+                    title={ natureObject.description }
+                    onClick={ () => setMatrix(natureObject.matrix) }>
+                { capitalize(natureName) }
+            </button>
+        </>
+    );
+
+}
+
+PokeNatureButtonGroup.propTypes = {
+    naturesArray: PropTypes.array,
+    setMatrix: PropTypes.func,
+    naturesLoading: PropTypes.bool,
+};
+
+PokeNatureButton.propTypes = {
+    natureName: PropTypes.string,
+    natureObject: PropTypes.object,
+    setMatrix: PropTypes.func,
 };

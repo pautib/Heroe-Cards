@@ -2,12 +2,18 @@ import PropTypes from "prop-types";
 import {useEffect, useRef} from "react";
 import { Tooltip } from "react-tooltip";
 
-export const IVInputNumber = ({ id, minValue, maxValue, labelContent, value, onChangeFunction }) => {
+export const EVInputNumber = ({ id, labelContent, value, addedMaxValue, onChangeFunction }) => {
+
+    const minValue = 0;
+    const maxValue = 252;
+    const maxSumEvValue = maxValue * 2 + 4;
 
     const tooltipId = 'tooltip_' + id;
     const tooltipMaxValue = "Maximum value is " + maxValue;
     const tooltipMinValue = "Minimum value is " + minValue;
     const tooltipDescription = useRef("");
+
+    const tooltipExceededEVSum = `The sum of EVs values cannot exceed ${maxSumEvValue}`;
 
     useEffect(() => {
 
@@ -21,9 +27,13 @@ export const IVInputNumber = ({ id, minValue, maxValue, labelContent, value, onC
             newDescription = tooltipMinValue;
         }
 
+        if (addedMaxValue === maxSumEvValue) {
+            newDescription = tooltipExceededEVSum;
+        }
+
         tooltipDescription.current = newDescription;
-        console.log(tooltipDescription)
-    }, [value]);
+
+    }, [value, addedMaxValue]);
 
 
     return (
@@ -42,17 +52,21 @@ export const IVInputNumber = ({ id, minValue, maxValue, labelContent, value, onC
                 data-tooltip-content={ tooltipDescription.current }
                 className="form-control"
                 style={{ borderRadius: '10px !important', blockSize: '50%', maxWidth: '50%' }}
-                onChange={ onChangeFunction }
+                onChange={ (event) =>  {
+                    if (event.target.value < value || addedMaxValue < maxSumEvValue) onChangeFunction(event);
+                }
+            }
             />
         </div>
     );
 }
 
-IVInputNumber.propTypes = {
+EVInputNumber.propTypes = {
     id: PropTypes.string,
     minValue: PropTypes.number,
     maxValue: PropTypes.number,
     value: PropTypes.number,
+    addedMaxValue: PropTypes.number,
     labelContent: PropTypes.string,
     onChangeFunction: PropTypes.func,
 };

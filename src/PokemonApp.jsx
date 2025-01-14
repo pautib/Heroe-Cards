@@ -1,10 +1,10 @@
-import {AppRouter} from "./router/AppRouter.jsx";
-import {AuthProvider} from "./auth/index.js";
+import { WalletProvider } from "./dapp/index.ts";
+import {PokemonRoutes} from "./pokemon";
 
-export const HeroesApp = () => {
+export const PokemonApp = () => {
     return (
-        <AuthProvider>
-            <AppRouter/>
-        </AuthProvider>
+        <WalletProvider>
+            <PokemonRoutes/>
+        </WalletProvider>
     )
 }

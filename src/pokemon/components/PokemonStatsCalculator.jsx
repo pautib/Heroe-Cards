@@ -1,223 +1,225 @@
-import {useEffect, useState,} from 'react';
+import { useEffect, useState} from 'react';
 import PropTypes from "prop-types";
-import { Unstable_NumberInput as NumberInput } from '@mui/base';
+import { Slider } from '@mui/material';
+import { getStatsCalculation } from "../helpers/getStatsCalculation.js";
+import { PokemonStatsChart } from "./PokemonStatsChart.jsx";
+import { PokeNatureButtonGroup } from "./PokeNatureButtonGroup.jsx";
+import {usePokemonNatures} from "../hooks/usePokemonNatures.js";
+import {IVInputNumber} from "./IVInputNumber.jsx";
+import {EVInputNumber} from "./EVInputNumber.jsx";
 
-import {BarChart} from "@mui/x-charts";
-import {Box, Slider, } from '@mui/material';
-import {getNaturesArrayValues} from "../helpers/getNatureArrayValues.js";
 
-export const PokemonStatsCalculator = (baseStats) => {
+const lvlMarks = [
+    {
+        value: 0,
+        label: '0',
+    },
+    {
+        value: 50,
+        label: '50',
+    },
+    {
+        value: 100,
+        label: '100',
+    },
+];
 
-    const [lvl, setLvl] = useState(1);
+export const PokemonStatsCalculator = ({ baseStats, pokemonName }) => {
 
-    const [ivHp, setIvHp] = useState (15);
-    const [ivAtk, setIvAtk] = useState (15);
-    const [ivDef, setIvDef] = useState (15);
-    const [ivAtkSp, setIvAtkSp] = useState (15);
-    const [ivDefSp, setIvDefSp] = useState (15);
-    const [ivSpeed, setIvSpeed] = useState (15);
+    const { natures, selectedNature, setSelectedNature } = usePokemonNatures([]);
+    const [lvl, setLvl] = useState(50);
+    const [ivArray, setIvArray] = useState([15,15,15,15,15,15]);
+    const [evArray, setEvArray] = useState([0,0,0,0,0,0]);
 
-    const [evHp, setEvHp] = useState (0);
-    const [evAtk, setEvAtk] = useState (0);
-    const [evDef, setEvDef] = useState (0);
-    const [evAtkSp, setEvAtkSp] = useState (0);
-    const [evDefSp, setEvDefSp] = useState (0);
-    const [evSpeed, setEvSpeed] = useState (0);
+    const [stats, setStats] = useState(getStatsCalculation(baseStats, ivArray, evArray, lvl, selectedNature, pokemonName));
+
 
     useEffect(() => {
-        console.log(baseStats)
-        let naturesArrayValues = getNaturesArrayValues();
-    }, []);
-
-    const handleLvlChange = (event, newValue) => {
-        if (typeof newValue !== 'number') {
-            return;
-        }
-        setLvl(newValue);
-    };
-
-    /*
-    const handleEvChange = (event, newValue) => {
-        if (typeof newValue !== 'number') {
-            return;
-        }
-        setEv(newValue);
-    };
-    */
-
-    const chartSetting = {
-        width: 500,
-        height: 200,
-    };
-
-    const dataset = [
-        {
-            stat: baseStats[0].base_stat,
-            statName: 'HP',
-        },
-        {
-            stat: baseStats[1].base_stat,
-            statName: 'Atk',
-        },
-        {
-            stat: baseStats[2].base_stat,
-            statName: 'Def',
-        },
-        {
-
-            stat: baseStats[3].base_stat,
-            statName: 'AtkSp',
-        },
-        {
-
-            stat: baseStats[4].base_stat,
-            statName: 'DefSp',
-        },
-        {
-
-            stat: baseStats[5].base_stat,
-            statName: 'Vel',
-        }
-    ];
+        setStats(getStatsCalculation(baseStats, ivArray, evArray, lvl, selectedNature, pokemonName));
+    }, [lvl, ivArray, evArray, selectedNature]);
 
     return (
-        <Box sx={{ width: '100%' }}>
-            <BarChart
-                dataset={dataset}
-                yAxis={[{ scaleType: 'band', dataKey: 'statName' }]}
-                series={[{ dataKey: 'stat' , color: '#f2c304'}]}
-                layout="horizontal"
-                colors="#f2c304"
-                {...chartSetting}
-                slotProps={{
-                    bar: {
-                        clipPath: `inset(0px round 10px 10px 10px 10px)`,
-                    },
-                }}
-            />
 
-            <Slider
-                value={ lvl }
-                onChange={ handleLvlChange }
-                valueLabelDisplay="auto"
-                min={1}
-                max={100}
-                aria-labelledby="input-lvl-number"
-            />
+        <div className="container-fluid">
 
-            <NumberInput
-                aria-label="IV HP input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivHp}
-                onChange={(event, val) => setIvHp(val)}
-            />
+            <div className="row">
+                <h4 className="mt-2">Level</h4>
+                <div className="col-xs-3 col-sm-3 col-md-3">
+                    <Slider
+                        value={ lvl }
+                        onChange={ (event, val) => setLvl(val) }
+                        valueLabelDisplay="auto"
+                        min={1}
+                        max={100}
+                        aria-labelledby="input-lvl-number"
+                        marks={lvlMarks}
+                        color="primary"
+                    />
+                </div>
+            </div>
 
-            <NumberInput
-                aria-label="IV Atk input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivAtk}
-                onChange={(event, val) => setIvAtk(val)}
-            />
+            <div className="row">
+                <h4 className="mt-2">IVs</h4>
 
-            <NumberInput
-                aria-label="IV Def input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivDef}
-                onChange={(event, val) => setIvDef(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2" >
+                    <IVInputNumber id="iv_hp" value={ivArray[0]} labelContent={"HP: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[0] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="IV AtkSp input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivAtkSp}
-                onChange={(event, val) => setIvAtkSp(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <IVInputNumber id="iv_atk" value={ivArray[1]} labelContent={"Atk: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[1] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="IV DefSp input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivDefSp}
-                onChange={(event, val) => setIvDefSp(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <IVInputNumber id="iv_def" value={ivArray[2]} labelContent={"Def: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[2] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="IV Speed input"
-                placeholder="0 to 31"
-                min={0}
-                max={31}
-                value={ivSpeed}
-                onChange={(event, val) => setIvSpeed(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <IVInputNumber id="iv_atksp" value={ivArray[3]} labelContent={"AtkSp: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[3] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="EV HP input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evHp}
-                onChange={(event, val) => setEvHp(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <IVInputNumber id="iv_defsp" value={ivArray[4]} labelContent={"DefSp: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[4] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="EV Atk input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evAtk}
-                onChange={(event, val) => setEvAtk(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <IVInputNumber id="iv_speed" value={ivArray[5]} labelContent={"Speed: "}
+                       onChangeFunction={(event) => {
+                           const newIvs = [...ivArray];
+                           newIvs[5] = event.target.valueAsNumber;
+                           setIvArray(newIvs);
+                       }}
+                    />
+                </div>
+            </div>
 
-            <NumberInput
-                aria-label="EV Def input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evDef}
-                onChange={(event, val) => setEvDef(val)}
-            />
+            <div className="row">
 
-            <NumberInput
-                aria-label="EV AtkSp input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evAtkSp}
-                onChange={(event, val) => setEvAtkSp(val)}
-            />
+                <h4 className="mt-2">EVs</h4>
 
-            <NumberInput
-                aria-label="EV DefSp input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evDefSp}
-                onChange={(event, val) => setEvDefSp(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2" >
+                    <EVInputNumber id="ev_hp" value={evArray[0]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"Hp: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[0] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
 
-            <NumberInput
-                aria-label="EV Speed input"
-                placeholder="0 to 252"
-                min={0}
-                max={252}
-                value={evSpeed}
-                onChange={(event, val) => setEvSpeed(val)}
-            />
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <EVInputNumber id="ev_atk" value={evArray[1]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"Atk: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[1] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
 
-        </Box>
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <EVInputNumber id="ev_def" value={evArray[2]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"Def: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[2] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
 
-    );
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <EVInputNumber id="ev_atksp" value={evArray[3]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"AtkSp: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[3] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
+
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <EVInputNumber id="ev_defsp" value={evArray[4]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"DefSp: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[4] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
+
+                <div className="col-xs-2 col-sm-2 col-md-2">
+                    <EVInputNumber id="ev_speed" value={evArray[5]}
+                       addedMaxValue={ evArray[0] + evArray[1] + evArray[2] + evArray[3] + evArray[4] + evArray[5] }
+                       labelContent={"Speed: "}
+                       onChangeFunction={(event) => {
+                           const newEvs = [...evArray];
+                           newEvs[5] = event.target.valueAsNumber;
+                           setEvArray(newEvs);
+                       }}
+                    />
+                </div>
+
+            </div>
+
+            <div className="row">
+                <h4 className="mt-2">Nature</h4>
+                <div className="col-xs-12 col-sm-12 col-md-12">
+                    <PokeNatureButtonGroup setMatrix={ setSelectedNature } naturesArray={ [...natures] }  />
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-xs-8 col-sm-8 col-md-8">
+                    <PokemonStatsChart stats={ stats } ></PokemonStatsChart>
+                </div>
+            </div>
+
+        </div>
+    )
 };
 
+
 PokemonStatsCalculator.propTypes = {
-    baseStats: PropTypes.array
+    baseStats: PropTypes.array,
+    pokemonName: PropTypes.string,
+    natures: PropTypes.object,
 };

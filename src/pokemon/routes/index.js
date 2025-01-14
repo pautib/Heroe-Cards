@@ -1,1 +1,1 @@
-export * from './HeroesRoutes.jsx'
+export * from './PokemonRoutes.jsx'

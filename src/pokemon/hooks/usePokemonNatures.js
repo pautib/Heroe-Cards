@@ -1,21 +1,26 @@
-import {useState} from "react";
+import { useEffect, useState} from 'react';
+import { getNaturesArrayValues } from '../helpers';
 
-export const useCarouselCounter = (initialValue = 0, minValue = 0, maxValue) => {
+export const usePokemonNatures = (initialValue = []) => {
 
-    const [counter, setCounter] = useState(initialValue);
+    const [naturesArray, setNaturesArray] = useState(initialValue);
+    const [selectedNature, setSelectedNature] = useState([1,1,1,1,1,1]);
+    const [areNaturesLoading, setAreNaturesLoading] = useState(true);
 
-    const increment = () => {
-        counter === maxValue ? setCounter(minValue) : setCounter(counter + 1);
-    }
-    const decrement = () => {
-        counter === minValue ? setCounter(maxValue) : setCounter(counter - 1);
-    }
-    const reset = () => setCounter(initialValue);
+    useEffect(() => {
+
+        getNaturesArrayValues()
+            .then((obj) => {
+                setNaturesArray(obj)
+            })
+            .finally(() => setAreNaturesLoading(false));
+
+    }, []);
 
     return {
-        counter,
-        increment,
-        decrement,
-        reset,
+        natures: naturesArray,
+        selectedNature: selectedNature,
+        setSelectedNature: setSelectedNature,
+        areNaturesLoading: areNaturesLoading,
     };
 }

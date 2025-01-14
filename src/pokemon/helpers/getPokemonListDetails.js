@@ -1,12 +1,14 @@
 const pokeApiRoot = 'https://pokeapi.co/api/v2/pokemon/';
+const pokeApiAllPokemonRoot =  pokeApiRoot + '?limit=2000';
 
-async function getPokemonList(nameOrId) {
-    return fetch(pokeApiRoot + nameOrId)
+
+async function getAllPokemonList() {
+    return fetch(pokeApiAllPokemonRoot)
         .then((response) => response.json())
         .then(bodyResp => bodyResp.results)
         .catch(error => {
                 console.error(error);
-                throw new Error(`${nameOrId} is not a valid pokemon`);
+                throw new Error(`Could not fetch entire Pokemon List`);
             }
         );
 }
@@ -29,11 +31,15 @@ async function getPokemonCardDetails(pokemon) {
       });
 }
 
-export const getPokemonByNameOrId = async(nameOrId) => {
+export const getPokemonListDetails = async(name) => {
 
-    const pokemonList = await getPokemonList(nameOrId);
+    let pokemonFiltered = await getAllPokemonList();
+
+    if (name.trim()) {
+        pokemonFiltered = pokemonFiltered.filter((pokemon) => pokemon.name.includes(name) );
+    }
     const pokemonCardsList = await Promise.all(
-        pokemonList.map( (pokemon) => { return getPokemonCardDetails(pokemon); })
+        pokemonFiltered.map( (pokemon) => { return getPokemonCardDetails(pokemon); })
     );
 
     return pokemonCardsList;

@@ -1,4 +1,4 @@
-pragma solidity 0.6.6;
+pragma solidity 0.8.4^;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
@@ -9,8 +9,8 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
     mapping(bytes32 => address) public requestIdToSender;
     mapping(bytes32 => uint256) public requestIdToTokenId;
 
-    event requestedPokemon(bytes32 indexed requestId); 
-    event PokemonCreated(uint256 indexed tokenId); 
+    event requestedPokemon(bytes32 indexed requestId);
+    event PokemonCreated(uint256 indexed tokenId);
     bytes32 internal keyHash;
     uint256 internal link_fee;
     uint256 public tokenCounter;
@@ -33,16 +33,15 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
 
     struct UniquePokemon {
         string nickname;
-        // eh, solidity gonna get better at this
         string item;
         bool shiny;
         string ability;
         string nature;
-        uint256 level; 
+        uint256 level;
     }
-    
+
     constructor(address _VRFCoordinator, address _LinkToken, bytes32 _keyhash, uint256 _link_fee)
-    public 
+    public
     VRFConsumerBase(_VRFCoordinator, _LinkToken)
     ERC721("Pokémon", "PKMON")
     {
@@ -52,7 +51,7 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
         natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
     }
 
-    function createRandomPokemon(uint256 userProvidedSeed) 
+    function createRandomPokemon(uint256 userProvidedSeed)
         public returns (bytes32){
             bytes32 requestId = requestRandomness(keyHash, link_fee, userProvidedSeed);
             requestIdToSender[requestId] = msg.sender;
@@ -144,7 +143,7 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
         battleStats.spa = getCalculatedStat( baseStats.spa, ivs.spa, evs.spa, pokemon.level); // We don't add the nature modifier!!!
         battleStats.spd = getCalculatedStat( baseStats.spd, ivs.spd, evs.spd, pokemon.level); // We don't add the nature modifier!!!
         battleStats.spe = getCalculatedStat( baseStats.spe, ivs.spe, evs.spe, pokemon.level); // We don't add the nature modifier!!!
-        
+
         battleStats.type1 = ivs.type1;
         battleStats.type2 = ivs.type2;
         battleStats.pokemonName = ivs.pokemonName;
@@ -162,7 +161,7 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
         return ((((2 * baseStat) + baseStatIv + (baseStatEvs / 4)) * level )/ 100) + 10 + level;
     }
 
-    // Could turn this into a chainlink API Call if we wanted 
+    // Could turn this into a chainlink API Call if we wanted
     function setTokenURI(uint256 tokenId, string memory _tokenURI) public onlyOwner {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
@@ -178,9 +177,9 @@ contract Pokemon is ERC721, VRFConsumerBase, Ownable, PokemonBaseStatData {
             expandedValues[i] = uint256(keccak256(abi.encode(randomValue, i)));
         }
         return expandedValues;
-    }   
+    }
 
-    
+
 
     // function setMoves(string memory move1, string memory move2,string memory move3,string memory move4, uint256 tokenId) public onlyOwner {
     //     uniquePokemon[tokenId].move1 = move1;

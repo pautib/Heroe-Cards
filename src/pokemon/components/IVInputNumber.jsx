@@ -2,7 +2,10 @@ import PropTypes from "prop-types";
 import {useEffect, useRef} from "react";
 import { Tooltip } from "react-tooltip";
 
-export const InlineInputNumber = ({ id, minValue, maxValue, labelContent, value, onChangeFunction }) => {
+export const IVInputNumber = ({ id, labelContent, value, onChangeFunction }) => {
+
+    const minValue = 0;
+    const maxValue = 31;
 
     const tooltipId = 'tooltip_' + id;
     const tooltipMaxValue = "Maximum value is " + maxValue;
@@ -22,7 +25,6 @@ export const InlineInputNumber = ({ id, minValue, maxValue, labelContent, value,
         }
 
         tooltipDescription.current = newDescription;
-        console.log(tooltipDescription)
     }, [value]);
 
 
@@ -48,7 +50,7 @@ export const InlineInputNumber = ({ id, minValue, maxValue, labelContent, value,
     );
 }
 
-InlineInputNumber.propTypes = {
+IVInputNumber.propTypes = {
     id: PropTypes.string,
     minValue: PropTypes.number,
     maxValue: PropTypes.number,

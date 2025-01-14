@@ -1,61 +1,71 @@
-import {Link, NavLink, useNavigate} from 'react-router-dom';
-import {useContext} from "react";
-import {AuthContext} from "../../auth";
+import {Link, NavLink} from 'react-router-dom';
+import {DApp} from "../../dapp/components/DApp";
+import { PopupButton } from './PopupButton.jsx';
+import { SelectedWallet, DisconnectWallet } from '../../dapp/index.ts';
 
+export const Navbar = () => {
 
-export const Navbar = (props) => {
-
-    const { user, logout } = useContext( AuthContext );
-    const navigate = useNavigate();
-    const onLogout = () => {
-        logout();
-        navigate("/login", { replace: true });
-    }
     return (
-        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-sm" style={{backgroundColor: "#aa0d18"}}>
 
             <Link
                 className="navbar-brand"
                 to="/"
             >
-                Asociaciones
+                <img src="/Pokemon.svg.png" alt="Pokemon" className="img-thumbnail" style={{backgroundColor: "#aa0d18", borderColor: "black" }}/>
             </Link>
 
             <div className="navbar-collapse">
                 <div className="navbar-nav">
 
                     <NavLink
-                        className={ ({ isActive}) => `nav-item nav-link ${ isActive ? 'active' : '' }`}
-                        to="/marvel"
-                    >
-                        Marvel
-                    </NavLink>
-
-                    <NavLink
-                        className={ ({ isActive}) => `nav-item nav-link ${ isActive ? 'active' : '' }`}
-                        to="/dc"
-                    >
-                        DC
-                    </NavLink>
-
-                    <NavLink
-                        className={ ({ isActive}) => `nav-item nav-link ${ isActive ? 'active' : '' }`}
+                        className="nav-item nav-link pokeNavSection"
                         to="/search"
                     >
                         Search
                     </NavLink>
 
+                    <NavLink
+                        className="nav-item nav-link pokeNavSection"
+                        to="/purchases"
+                    >
+                        Purchases
+                    </NavLink>
+
+                    <NavLink
+                        className="nav-item nav-link pokeNavSection"
+                        to="/objects"
+                    >
+                        Objects
+                    </NavLink>
+
+                    <NavLink
+                        className="nav-item nav-link pokeNavSection"
+                        to="/wallet-test"
+                    >
+                        Wallet
+                    </NavLink>
 
                 </div>
             </div>
 
-            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
+            <div className="navbar-collapse justify-content-end">
                 <ul className="navbar-nav ml-auto">
 
-                    <span className="nav-item nav-link text-info">
-                        { user?.name }
+                    <span className="nav-item nav-link" style={{ fontWeight: 'bold', color: '#f2c304' }}>
+                        <PopupButton buttonTitle={"Available Wallets"} style= { { buttonClassName: 'pokeNavWalletButton'} } >
+                            <DApp/>
+                        </PopupButton>
                     </span>
-                    <button className="nav-item nav-link btn" onClick={() => onLogout() }>Logout</button>
+
+                    <span className="nav-item nav-link" style={{ fontWeight: 'bold', color: '#f2c304' }}>
+                        <SelectedWallet />
+                    </span>
+
+                    <span className="nav-item nav-link" style={{ fontWeight: 'bold', color: '#f2c304' }}>
+                        <DisconnectWallet />
+                    </span>
+
                 </ul>
             </div>
         </nav>

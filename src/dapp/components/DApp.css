@@ -1,0 +1,66 @@
+.DApp {
+    display: contents;
+    min-width: 100vw;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  .metaMaskError {
+    margin-top: 1em;
+    border-radius: 0.5em;
+    height: 36px;
+    padding: 16px;
+    color: #efefef;
+    background-color: transparent;
+    user-select: none;
+  }
+  
+  .providers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    gap: 1em;
+  
+    padding: 0.6em 1.2em;
+  }
+  
+  .providers button {
+    width: 8em;
+    height: 5em;
+    border-radius: 1em;
+    background-color: #f2c304;
+    color: #3c5aa6;
+    font-weight: bold;
+    border: solid #aa0d18;
+  }
+  
+  .providers button img {
+    width: 2em;
+  }
+
+  .selectedWallet {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+  
+    padding: 0.6em 1.2em;
+    margin-bottom: 0.5em;
+  
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 500;
+  }
+  .selectedWallet > img {
+    width: 2em;
+    height: 1.5em;
+    margin-right: 1em;
+  }
+
+  .disconnectButton {
+    border-radius: 1em;
+    background-color: #f2c304;
+    color: #3c5aa6;
+    font-weight: bold;
+    border: solid #aa0d18;
+  }
