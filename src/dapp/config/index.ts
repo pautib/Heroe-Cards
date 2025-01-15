@@ -1,7 +1,6 @@
 declare global {
     interface WindowEventMap {
       "eip6963:announceProvider": CustomEvent
-
       "chainChanged": CustomEvent
     }
 }
@@ -88,3 +87,20 @@ export function isSupportedChain(chainId: number | null | undefined): chainId is
     if (!chainId) return false;
     return !!SupportedChainId[chainId];
 }
+
+export const POKEMON_CONTRACT = {
+    
+    address: "0x495f947276749Ce646f68AC8c248420045cb7b5e",
+    abi: [ 
+        "constructor(string symbol, string name)",
+        "function transferFrom(address from, address to, uint value)",
+        "function balanceOf(address owner) view returns (uint balance)",
+        "event Transfer(address indexed from, address indexed to, address value)",
+        "error InsufficientBalance(account owner, uint balance)",
+        "function addPerson(tuple(string name, uint16 age) person)",
+        "function addPeople(tuple(string name, uint16 age)[] person)",
+        "function getPerson(uint id) view returns (tuple(string name, uint16 age))",
+      
+        "event PersonAdded(uint indexed id, tuple(string name, uint16 age) person)"
+    ]
+};

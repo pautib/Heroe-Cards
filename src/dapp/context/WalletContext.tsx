@@ -7,6 +7,7 @@ const init : WalletProviderContext = {
     errorMessage: null,
     connectWallet: () => { return Promise.resolve(); } ,
     disconnectWallet: () => {},
+    switchChain: (chainId: number) => { return Promise.resolve(); },
     clearError: () => {}
 }
 

@@ -49,8 +49,8 @@ export const WalletProvider: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
 
     function onChainChanged(event: string) { // event is a string with the new chain id
-      console.log(event)
-      console.log("The wallets", wallets)
+      //console.log(event)
+      //console.log("The wallets", wallets)
       
       if (selectedWalletRdns) {
         const wallet = wallets[selectedWalletRdns]
@@ -80,22 +80,20 @@ export const WalletProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   }, [selectedWalletRdns])
 
-
-
   const connectWallet = useCallback(async (walletRdns: string) => {
     try {
       const wallet = wallets[walletRdns]
       const accounts = (await wallet.provider.request({
         method: "eth_requestAccounts",
       })) as string[]
-      console.log(wallet)
+      
       if (accounts?.[0]) {
         setSelectedWalletRdns(wallet.info.rdns)
         setSelectedAccountByWalletRdns((currentAccounts) => ({
           ...currentAccounts,
           [wallet.info.rdns]: accounts[0],
         }))
-        console.log(wallet)
+        
         localStorage.setItem(LOCAL_STORAGE_KEYS.SELECTED_WALLET_RDNS, wallet.info.rdns)
         localStorage.setItem(LOCAL_STORAGE_KEYS.SELECTED_ACCOUNT_BY_WALLET_RDNS,
           JSON.stringify({
