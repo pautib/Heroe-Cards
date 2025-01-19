@@ -1,5 +1,6 @@
-import {Link} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PropTypes from 'prop-types';
+import { BASE_URI } from "../routes";
 
 export const PokemonCard = ({
       id,
@@ -29,7 +30,7 @@ export const PokemonCard = ({
                                 <p className="card-text">
                                     <small className="text-muted"><b>Weight:</b> { weight / 10.0 } Kg</small>
                                 </p>
-                                <Link to={`./pokemon/${ id }`}><b>More information</b></Link>
+                                <NavLink to={`${ BASE_URI }/pokemon/${ id }`}><b>More information</b></NavLink>
                             </div>
                         </div>
                     </div>
