@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 export const PokemonTypeImage = ({ pokemonTypeName }) => {
 
-    const getPokemonTypeImageUri = (pokemonType) => "/pokemonTypes/Pokemon_Type_Icon_" + pokemonType + ".svg";
+    const getPokemonTypeImageUri = (pokemonType) => "./pokemonTypes/Pokemon_Type_Icon_" + pokemonType + ".svg";
 
     return (
         pokemonTypeName ?

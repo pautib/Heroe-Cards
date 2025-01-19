@@ -9,7 +9,7 @@ export const DisconnectWallet = () => {
     <>
       {
         selectedAccount &&
-          <img key="disconnectWallet" title="Disconnect Wallet" onClick={ disconnectWallet } src="/logout.svg" className="btn disconnectButton" />
+          <img key="disconnectWallet" title="Disconnect Wallet" onClick={ disconnectWallet } src="./logout.svg" className="btn disconnectButton" />
       }
     </>
   )

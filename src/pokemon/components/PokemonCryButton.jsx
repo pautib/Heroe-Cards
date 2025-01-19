@@ -15,7 +15,7 @@ export const PokemonCryButton = ({
     }
 
     return (
-            <img key="crySound" onClick={ onSoundDisplay } src="/speaker_icon.svg" className="btn" />
+            <img key="crySound" onClick={ onSoundDisplay } src="./speaker_icon.svg" className="btn" />
         )
 }
 

@@ -1,7 +1,7 @@
 import { useForm } from "../../hooks/useForm.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import queryString from 'query-string';
-import { PokemonCard } from "../components";
+import { PokemonCard, PokeballSpinner } from "../components";
 import { useMemo } from "react";
 import { usePokemonSearchList } from "../hooks";
 
@@ -48,9 +48,7 @@ export const SearchPokemonPage = () => {
             </div>
 
             { !pokemons && (
-                <div>
-                    <img src="/pokeball25.svg.png" alt="Loading..." className="spinner" />
-                </div>
+                <PokeballSpinner />
             )}
 
 

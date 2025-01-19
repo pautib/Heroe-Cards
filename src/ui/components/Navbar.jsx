@@ -2,17 +2,18 @@ import {Link, NavLink} from 'react-router-dom';
 import {DApp} from "../../dapp/components/DApp";
 import { PopupButton } from './PopupButton.jsx';
 import { SelectedWallet, DisconnectWallet } from '../../dapp/index.ts';
+import PropTypes from "prop-types";
 
-export const Navbar = () => {
+export const Navbar = ({baseUri}) => {
 
     return (
         <nav className="navbar navbar-expand-sm" style={{backgroundColor: "#aa0d18"}}>
 
             <Link
                 className="navbar-brand"
-                to="/"
+                to={baseUri}
             >
-                <img src="/Pokemon.svg.png" alt="Pokemon" className="img-thumbnail" style={{backgroundColor: "#aa0d18", borderColor: "black" }}/>
+                <img src="./Pokemon.svg.png" alt="Pokemon" className="img-thumbnail" style={{backgroundColor: "#aa0d18", borderColor: "black" }}/>
             </Link>
 
             <div className="navbar-collapse">
@@ -20,28 +21,28 @@ export const Navbar = () => {
 
                     <NavLink
                         className="nav-item nav-link pokeNavSection"
-                        to="/search"
+                        to={baseUri + "/search"}
                     >
                         Search
                     </NavLink>
 
                     <NavLink
                         className="nav-item nav-link pokeNavSection"
-                        to="/purchases"
+                        to={baseUri + "/purchases"}
                     >
                         Purchases
                     </NavLink>
 
                     <NavLink
                         className="nav-item nav-link pokeNavSection"
-                        to="/objects"
+                        to={baseUri + "/objects"}
                     >
                         Objects
                     </NavLink>
 
                     <NavLink
                         className="nav-item nav-link pokeNavSection"
-                        to="/wallet-test"
+                        to={baseUri + "/wallet-test"}
                     >
                         Wallet
                     </NavLink>
@@ -71,3 +72,8 @@ export const Navbar = () => {
         </nav>
     )
 }
+
+
+Navbar.propTypes = {
+    baseUri: PropTypes.string,
+};

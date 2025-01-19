@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/pokemon-nft-react/',
+  base: '/pokemon-nft-react',
   plugins: [react(), tsconfigPaths()],
   esbuild: {
     jsxInject: `import React from 'react'`

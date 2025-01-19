@@ -29,7 +29,7 @@ export const PokemonCard = ({
                                 <p className="card-text">
                                     <small className="text-muted"><b>Weight:</b> { weight / 10.0 } Kg</small>
                                 </p>
-                                <Link to={`/pokemon/${ id }`}><b>More information</b></Link>
+                                <Link to={`./pokemon/${ id }`}><b>More information</b></Link>
                             </div>
                         </div>
                     </div>

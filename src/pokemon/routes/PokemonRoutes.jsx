@@ -4,16 +4,21 @@ import {Navbar} from "../../ui";
 import {DApp} from "../../dapp/components/DApp";
 
 export const PokemonRoutes = () => {
+
+    const baseUri = "/pokemon-nft-react";
+
     return (
         <>
-            <Navbar/>
+            <Navbar baseUri={baseUri}/>
 
             <div className="container">
                 <Routes>
-                    <Route path="/*" element={<Navigate to="/search" />} />
-                    <Route path="search" element={<SearchPokemonPage />} />
-                    <Route path="pokemon/:pokemonId" element={<PokemonPage />} />
-                    <Route path="wallet-test" element={<DApp />} />
+                    <Route path= {baseUri}>
+                        <Route path= {baseUri + "/"} element={<Navigate to="search" />} />
+                        <Route path="search" element={<SearchPokemonPage />} />
+                        <Route path="pokemon/:pokemonId" element={<PokemonPage />} />
+                        <Route path="wallet-test" element={<DApp />} />
+                    </Route>
                 </Routes>
             </div>
         </>
